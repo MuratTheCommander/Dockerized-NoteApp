@@ -1,0 +1,19 @@
+version: "3.9"
+
+services: 
+    db:
+        image: postgres:16
+        container_name: db-container
+        restart: unless-stopped
+        environment:
+            POSTGRES_DB: NoteApp
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: 12345678.
+        ports: 
+            - "5432:5432"
+        volumes: 
+            - pgdata:/var/lib/postgresql/data
+            - ./initdb:/docker-entrypoint-initdb.d
+
+volumes:
+    pgdata:
