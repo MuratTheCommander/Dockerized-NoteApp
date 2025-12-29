@@ -24,12 +24,25 @@ public class AuthController {
     }
 
 
-    @GetMapping("/hi")
+    @GetMapping("/hi") // test passed
     public String hiTest(){
         return "hi test succeded";
     }
 
-    @PostMapping("/login")
+    @GetMapping("/isRoleValidJwt") // test passed
+    public ResponseEntity<String> roleJwtTest(
+            @RequestHeader("Authorization") String authHeader
+    ) {
+        String jwt = authHeader.replace("Bearer ", "");
+
+        if (jwtService.isTokenValidForUser(jwt)) {
+            return ResponseEntity.ok("JWT is valid and role is correct");
+        }
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired JWT");
+    }
+
+
+    @PostMapping("/login") // test passed (furher tests will be made when the client side is developed)
     public ResponseEntity<AuthDto> login(@RequestBody RequestUserDto requestUserDto){
         ResponseUserDto loggedUser = authService.safeLogIn(
                 requestUserDto.getUserName(),
@@ -41,7 +54,7 @@ public class AuthController {
         }return ResponseEntity.status(401).build();
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/logout") // test passed
     public ResponseEntity<Void> logout(){
         return ResponseEntity.noContent().build();
     }
@@ -51,7 +64,7 @@ public class AuthController {
         return null; //will be implemented when refresh token support is added
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register") // test passed
     public ResponseEntity<AuthDto> register(@RequestBody RequestUserDto requestUserDto){
 
         if(authService.doesUserNameExist(requestUserDto.getUserName())){

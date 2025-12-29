@@ -75,11 +75,24 @@ public class JwtService {
     public boolean isTokenValidForUser(String jwtToken,User user){
         try{
             Claims claims = parseJwt(jwtToken);
+            List<String> roles = parseJwt(jwtToken).get("roles", List.class);
             String userName = claims.getSubject();
             Date exp = claims.getExpiration();
-            return userName.equals(user.getUsername()) && exp.after(new Date());
+            return userName.equals(user.getUsername()) && exp.after(new Date()) && roles.contains("ROLE_USER");
         }catch (JwtException | IllegalArgumentException e){
         return false;
+        }
+    }
+
+    public boolean isTokenValidForUser(String jwtToken){
+        try{
+            Claims claims = parseJwt(jwtToken);
+            List<String> roles = parseJwt(jwtToken).get("roles", List.class);
+            String userName = claims.getSubject();
+            Date exp = claims.getExpiration();
+            return exp.after(new Date()) && roles.contains("ROLE_USER");
+        }catch (JwtException | IllegalArgumentException e){
+            return false;
         }
     }
 
