@@ -22,12 +22,25 @@ public class Note {
     @Column(nullable = false,name = "note_id")
     private long noteId;
 
-    @Column(nullable = false,name = "userid")
+    @Column(nullable = false,name = "user_id")
     private long userId;
 
-    @Lob
     @Column(nullable = false,name = "note_content")
     private String textContent;
+
+    @Column(nullable = false,name = "create_date")
+    @CreationTimestamp
+    private OffsetDateTime createDate;
+
+    @UpdateTimestamp
+    @Column(nullable = false,name = "update_date")
+    private OffsetDateTime updateDate;
+
+    @Column(nullable = false,name = "ispinned")
+    private boolean isPinned;
+
+    @Column(nullable = false,name = "isarchived")
+    private boolean isArchived;
 
     public long getNoteId() {
         return noteId;
@@ -84,18 +97,4 @@ public class Note {
     public void setArchived(boolean archived) {
         isArchived = archived;
     }
-
-    @Column(nullable = false,name = "create_date")
-    @CreationTimestamp
-    private OffsetDateTime createDate;
-
-    @UpdateTimestamp
-    @Column(nullable = false,name = "update_date")
-    private OffsetDateTime updateDate;
-
-    @Column(nullable = false,name = "ispinned")
-    private boolean isPinned;
-
-    @Column(nullable = false,name = "isarchived")
-    private boolean isArchived;
 }
