@@ -34,7 +34,9 @@ public class NoteController {
                         note.getUserId(),
                         note.getTextContent(),
                         note.isPinned(),
-                        note.isArchived()
+                        note.isArchived(),
+                        note.getCreateDate(),
+                        note.getUpdateDate()
                 ))
                 .toList();
             return ResponseEntity.status(200).body(returnList);
@@ -51,7 +53,9 @@ public class NoteController {
                                 note.getUserId(),
                                 note.getTextContent(),
                                 note.isPinned(),
-                                note.isArchived()
+                                note.isArchived(),
+                                note.getCreateDate(),
+                                note.getUpdateDate()
                         )
                 ))
                 .orElse(ResponseEntity.notFound().build());
@@ -63,7 +67,7 @@ public class NoteController {
         try{
             Note resultNote = dataRepository.save(new Note(userId,requestNoteDto.getTextContent(),requestNoteDto.isPinned(),requestNoteDto.isArchived()));
             ResponseNoteDto responseNoteDto = new ResponseNoteDto(resultNote.getNoteId(),resultNote.getUserId(),
-                    resultNote.getTextContent(),resultNote.isPinned(),resultNote.isArchived());
+                    resultNote.getTextContent(),resultNote.isPinned(),resultNote.isArchived(),resultNote.getCreateDate(),resultNote.getUpdateDate());
             return ResponseEntity.status(201).body(responseNoteDto);
         }catch (Exception e){
             System.out.println(e);
@@ -87,7 +91,9 @@ public class NoteController {
                             updatedNote.getUserId(),
                             updatedNote.getTextContent(),
                             updatedNote.isPinned(),
-                            updatedNote.isArchived()
+                            updatedNote.isArchived(),
+                            updatedNote.getCreateDate(),
+                            updatedNote.getUpdateDate()
                     ));
                 })
                 .orElse(ResponseEntity.notFound().build());

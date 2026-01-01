@@ -24,12 +24,14 @@ public class ResponseNoteDto {
 
     }
 
-    public ResponseNoteDto(long noteId, long userId, String textContent, boolean isPinned, boolean isArchived) {
+    public ResponseNoteDto(long noteId, long userId, String textContent, boolean isPinned, boolean isArchived,OffsetDateTime createDate,OffsetDateTime updateDate) {
         this.noteId = noteId;
         this.userId = userId;
         this.textContent = textContent;
         this.isPinned = isPinned;
         this.isArchived = isArchived;
+        this.createDate = createDate;
+        this.updateDate = updateDate;
     }
 
     public long getNoteId() {
