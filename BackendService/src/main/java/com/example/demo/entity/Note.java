@@ -42,6 +42,13 @@ public class Note {
     @Column(nullable = false,name = "isarchived")
     private boolean isArchived;
 
+    public Note(long userId, String textContent, boolean isPinned, boolean isArchived) {
+        this.userId = userId;
+        this.textContent = textContent;
+        this.isPinned = isPinned;
+        this.isArchived = isArchived;
+    }
+
     public long getNoteId() {
         return noteId;
     }
