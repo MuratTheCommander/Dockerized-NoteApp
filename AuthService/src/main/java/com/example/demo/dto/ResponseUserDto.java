@@ -10,24 +10,35 @@ public class ResponseUserDto {
 
     private final String username;
     private OffsetDateTime createDate;
+
+    public long getUserId() {
+        return userId;
+    }
+
     private final Set<String> userRoles;
+    private final long userId;
 
     public ResponseUserDto(
+            long userId,
                    String username,
                    OffsetDateTime createDate,
                    Set<Role> userRoles) {
 
+        this.userId = userId;
         this.username = username;
         this.createDate = createDate;
         this.userRoles = userRoles.stream().map(Role::getRoleName).collect(Collectors.toSet());
     }
 
     public ResponseUserDto(
+            long userId,
             String username,
             Set<Role> userRoles
+
     ){
         this.username = username;
         this.userRoles = userRoles.stream().map(Role::getRoleName).collect(Collectors.toSet());
+        this.userId = userId;
     }
 
     public String getUsername() {

@@ -21,7 +21,7 @@ public class JwtService {
     @Value("${accessToken.secretkey}")
     private String secretKey;
 
-    private final long expirationMs = 5 * 60 * 1000; //5 minutes
+    private final long expirationMs = 10 * 60 * 1000; //10 minutes
 
     private SecretKey getSecretKey(){
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));

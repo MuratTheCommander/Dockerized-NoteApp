@@ -50,6 +50,7 @@ public class AuthService {
         userRepository.save(userToRegister);
 
         return new ResponseUserDto(
+                userToRegister.getId(),
                 userToRegister.getUsername(),
                 userToRegister.getCreateDate(),
                 userToRegister.getRoles());
@@ -60,7 +61,7 @@ public class AuthService {
         if(doesUserNameExist(userName)){
             User userToLogIn = userRepository.findByUsername(userName).orElseThrow();
             if(passwordEncoder.matches(password, userToLogIn.getPassword())) {
-                return new ResponseUserDto(userToLogIn.getUsername(), userToLogIn.getRoles());
+                return new ResponseUserDto(userToLogIn.getId(),userToLogIn.getUsername(), userToLogIn.getRoles());
             }
             }return null;
     }
