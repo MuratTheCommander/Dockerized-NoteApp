@@ -9,9 +9,9 @@ public class RequestNoteDto {
 
     private String textContent;
 
-    private boolean isPinned;
+    private boolean pinned;
 
-    private boolean isArchived;
+    private boolean archived;
 
     public RequestNoteDto() {
 
@@ -34,18 +34,18 @@ public class RequestNoteDto {
     }
 
     public boolean isPinned() {
-        return isPinned;
+        return pinned;
     }
 
     public void setPinned(boolean pinned) {
-        isPinned = pinned;
+        this.pinned = pinned;
     }
 
     public boolean isArchived() {
-        return isArchived;
+        return archived;
     }
 
     public void setArchived(boolean archived) {
-        isArchived = archived;
+        this.archived = archived;
     }
 }
