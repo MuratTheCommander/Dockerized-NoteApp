@@ -23,21 +23,13 @@ public class NoteController {
     public String hiTest(){
         return "hi from note backend service";
     }
-
+    
     //get all notes - GET
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<ResponseNoteDto>> getNotes(@PathVariable long userId){
         List<ResponseNoteDto> returnList = dataRepository.findByUserId(userId)
                 .stream()
-                .map(note -> new ResponseNoteDto(
-                        note.getNoteId(),
-                        note.getUserId(),
-                        note.getTextContent(),
-                        note.isPinned(),
-                        note.isArchived(),
-                        note.getCreateDate(),
-                        note.getUpdateDate()
-                ))
+                .map(ResponseNoteDto::from)
                 .toList();
             return ResponseEntity.status(200).body(returnList);
     }
@@ -48,15 +40,7 @@ public class NoteController {
 
         return dataRepository.findByNoteIdAndUserId(noteId, userId)
                 .map(note -> ResponseEntity.ok(
-                        new ResponseNoteDto(
-                                note.getNoteId(),
-                                note.getUserId(),
-                                note.getTextContent(),
-                                note.isPinned(),
-                                note.isArchived(),
-                                note.getCreateDate(),
-                                note.getUpdateDate()
-                        )
+                        ResponseNoteDto.from(note)
                 ))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -66,8 +50,7 @@ public class NoteController {
     public ResponseEntity<ResponseNoteDto> addNote(@PathVariable long userId,@RequestBody RequestNoteDto requestNoteDto){
         try{
             Note resultNote = dataRepository.save(new Note(userId,requestNoteDto.getTextContent(),requestNoteDto.isPinned(),requestNoteDto.isArchived()));
-            ResponseNoteDto responseNoteDto = new ResponseNoteDto(resultNote.getNoteId(),resultNote.getUserId(),
-                    resultNote.getTextContent(),resultNote.isPinned(),resultNote.isArchived(),resultNote.getCreateDate(),resultNote.getUpdateDate());
+            ResponseNoteDto responseNoteDto = ResponseNoteDto.from(resultNote);
             return ResponseEntity.status(201).body(responseNoteDto);
         }catch (Exception e){
             System.out.println(e);
@@ -78,23 +61,13 @@ public class NoteController {
     //update a note - PUT
     @PutMapping("/user/{userId}/note/{noteId}")
     public ResponseEntity<ResponseNoteDto> updateNote(@PathVariable long userId,@PathVariable long noteId,@RequestBody RequestNoteDto requestNoteDto){
-
         return dataRepository.findByNoteIdAndUserId(noteId, userId).map(note -> {
             note.setTextContent(requestNoteDto.getTextContent());
             note.setPinned(requestNoteDto.isPinned());
             note.setArchived(requestNoteDto.isArchived());
 
             Note updatedNote = dataRepository.save(note);
-
-                    return ResponseEntity.ok(new ResponseNoteDto(
-                            updatedNote.getNoteId(),
-                            updatedNote.getUserId(),
-                            updatedNote.getTextContent(),
-                            updatedNote.isPinned(),
-                            updatedNote.isArchived(),
-                            updatedNote.getCreateDate(),
-                            updatedNote.getUpdateDate()
-                    ));
+                    return ResponseEntity.ok(ResponseNoteDto.from(updatedNote));
                 })
                 .orElse(ResponseEntity.notFound().build());
     }

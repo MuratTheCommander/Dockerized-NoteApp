@@ -1,5 +1,7 @@
 package com.example.demo.dto;
 
+import com.example.demo.entity.Note;
+
 import java.time.OffsetDateTime;
 
 public class ResponseNoteDto {
@@ -32,6 +34,16 @@ public class ResponseNoteDto {
         this.isArchived = isArchived;
         this.createDate = createDate;
         this.updateDate = updateDate;
+    }
+
+    public static ResponseNoteDto from(Note note){
+        return new ResponseNoteDto(note.getNoteId(),
+                   note.getUserId(),
+                   note.getTextContent(),
+                   note.isPinned(),
+                   note.isArchived(),
+                   note.getCreateDate(),
+                   note.getUpdateDate() );
     }
 
     public long getNoteId() {
