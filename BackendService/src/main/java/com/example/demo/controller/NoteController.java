@@ -18,24 +18,29 @@ public class NoteController {
     @Autowired
     DataRepository dataRepository;
 
+    private static final String USER_PATH = "/user/{userId}";
+    private static final String USER_NOTE_PATH = "/user/{userId}/note/{noteId}";
+
     //hi test
-    @GetMapping("hi")
+    @GetMapping("/hi")
     public String hiTest(){
         return "hi from note backend service";
     }
-    
+
     //get all notes - GET
-    @GetMapping("/user/{userId}")
+    // @GetMapping("/user/{userId}")
+    @GetMapping(USER_PATH)
     public ResponseEntity<List<ResponseNoteDto>> getNotes(@PathVariable long userId){
         List<ResponseNoteDto> returnList = dataRepository.findByUserId(userId)
                 .stream()
                 .map(ResponseNoteDto::from)
                 .toList();
-            return ResponseEntity.status(200).body(returnList);
+            return ResponseEntity.ok(returnList);
     }
 
     //get a note - GET
-    @GetMapping("/user/{userId}/note/{noteId}")
+//    @GetMapping("/user/{userId}/note/{noteId}")
+    @GetMapping(USER_NOTE_PATH)
     public ResponseEntity<ResponseNoteDto> getNote(@PathVariable long userId,@PathVariable long noteId){
 
         return dataRepository.findByNoteIdAndUserId(noteId, userId)
@@ -46,7 +51,8 @@ public class NoteController {
     }
 
     //add a note - POST
-    @PostMapping("/user/{userId}")
+//    @PostMapping("/user/{userId}")
+    @PostMapping(USER_PATH)
     public ResponseEntity<ResponseNoteDto> addNote(@PathVariable long userId,@RequestBody RequestNoteDto requestNoteDto){
         try{
             Note resultNote = dataRepository.save(new Note(userId,requestNoteDto.getTextContent(),requestNoteDto.isPinned(),requestNoteDto.isArchived()));
@@ -59,7 +65,8 @@ public class NoteController {
     }
 
     //update a note - PUT
-    @PutMapping("/user/{userId}/note/{noteId}")
+//    @PutMapping("/user/{userId}/note/{noteId}")
+    @PutMapping(USER_NOTE_PATH)
     public ResponseEntity<ResponseNoteDto> updateNote(@PathVariable long userId,@PathVariable long noteId,@RequestBody RequestNoteDto requestNoteDto){
         return dataRepository.findByNoteIdAndUserId(noteId, userId).map(note -> {
             note.setTextContent(requestNoteDto.getTextContent());
@@ -74,10 +81,11 @@ public class NoteController {
 
     //delete a note - DELETE
     @Transactional
-    @DeleteMapping("/user/{userId}/note/{noteId}")
+//    @DeleteMapping("/user/{userId}/note/{noteId}")
+    @DeleteMapping(USER_NOTE_PATH)
     public ResponseEntity<Void> deleteNote(
-            @PathVariable Long userId,
-            @PathVariable Long noteId) {
+            @PathVariable long userId,
+            @PathVariable long noteId) {
 
         int deleted = dataRepository.deleteByNoteIdAndUserId(noteId, userId);
 
@@ -85,8 +93,4 @@ public class NoteController {
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }
-
-
-
-
 }
