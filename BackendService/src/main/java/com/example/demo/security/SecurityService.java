@@ -7,8 +7,10 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 
@@ -36,6 +38,32 @@ public class SecurityService {
 
     public List<String> extractRoles(String jwtToken){
         return parseJwt(jwtToken).get("roles",java.util.List.class);
+    }
+
+    public String[] splitJwt(String jwt){
+        return jwt.split("\\.");
+    }
+
+    public String createSignature(String[] jwtParts){
+        try{
+            String encodedHeaderPayload = jwtParts[0] + "." + jwtParts[1];
+
+            SecretKey secretKey = getSecretKey();
+
+            Mac mac = Mac.getInstance("HmacSHA256");
+            mac.init(secretKey);
+
+            byte[] rawHmac = mac.doFinal(encodedHeaderPayload.getBytes(StandardCharsets.UTF_8));
+
+            return Base64.getUrlEncoder()
+                    .withoutPadding()
+                    .encodeToString(rawHmac);
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create JWT signature",e);
+        }
+
+
     }
 
 
