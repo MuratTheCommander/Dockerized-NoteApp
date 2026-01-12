@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.List;
 
@@ -44,7 +45,16 @@ public class SecurityService {
         return jwt.split("\\.");
     }
 
-    public String createSignature(String[] jwtParts){
+    public boolean validateJwt(String clientJwt){
+
+        if (clientJwt == null || clientJwt.isBlank()) return false;
+
+        String[] jwtParts = clientJwt.split("\\.");
+
+        if (jwtParts.length != 3) return false;
+
+        String secureSignature;
+
         try{
             String encodedHeaderPayload = jwtParts[0] + "." + jwtParts[1];
 
@@ -55,18 +65,18 @@ public class SecurityService {
 
             byte[] rawHmac = mac.doFinal(encodedHeaderPayload.getBytes(StandardCharsets.UTF_8));
 
-            return Base64.getUrlEncoder()
+            secureSignature = Base64.getUrlEncoder()
                     .withoutPadding()
                     .encodeToString(rawHmac);
 
+            return MessageDigest.isEqual(
+                    jwtParts[2].getBytes(StandardCharsets.UTF_8),
+                    secureSignature.getBytes(StandardCharsets.UTF_8)
+            );
+
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create JWT signature",e);
+            return false;
         }
-
-
     }
-
-
-
 
 }
