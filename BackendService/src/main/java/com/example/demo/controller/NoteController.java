@@ -4,6 +4,7 @@ import com.example.demo.dto.RequestNoteDto;
 import com.example.demo.dto.ResponseNoteDto;
 import com.example.demo.entity.Note;
 import com.example.demo.repository.DataRepository;
+import com.example.demo.security.SecurityService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,9 @@ public class NoteController {
 
     @Autowired
     DataRepository dataRepository;
+
+    @Autowired
+    SecurityService securityService;
 
     private static final String USER_PATH = "/user/{userId}";
     private static final String USER_NOTE_PATH = "/user/{userId}/note/{noteId}";
@@ -93,4 +97,13 @@ public class NoteController {
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/isJwtValid")
+    public ResponseEntity<Integer> isJwtValid(@RequestBody String clientJwt){
+        if(securityService.validateJwt(clientJwt)){
+            return ResponseEntity.ok(200);
+        }return ResponseEntity.ok(401);
+    }
+
+
 }

@@ -21,14 +21,17 @@ public class JwtService {
     @Value("${accessToken.secretkey}")
     private String secretKey;
 
-    private final long expirationMs = 60 * 60 * 1000; //60 minutes
+    private final long expirationMs = 5 * 60 * 1000; //5 minutes
 
     private SecretKey getSecretKey(){
         return Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateJwt(ResponseUserDto user){
+        Date now = new Date();
         Date expiryDate = new Date(System.currentTimeMillis() + expirationMs);
+        System.out.println("IAT = " + now);
+        System.out.println("EXP = " + expiryDate);
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("roles",user.getUserRoles())

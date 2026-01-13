@@ -49,6 +49,7 @@ public class AuthController {
                 requestUserDto.getPassword());
         if(loggedUser != null){
             String jwt = jwtService.generateJwt(loggedUser);
+            System.out.println("TOKEN = " + jwt);
             AuthDto authDto = new AuthDto(loggedUser,jwt);
             return ResponseEntity.ok(authDto);
         }return ResponseEntity.status(401).build();
