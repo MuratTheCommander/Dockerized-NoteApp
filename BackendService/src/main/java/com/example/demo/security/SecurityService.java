@@ -37,6 +37,10 @@ public class SecurityService {
         return parseJwt(jwtToken).get("roles",java.util.List.class);
     }
 
+    public String extractUsername(String jwtToken){
+        return parseJwt(jwtToken).getSubject();
+    }
+
     public boolean validateJwt(String jwt){
         if(jwt == null || jwt.isBlank()){
             return false;
