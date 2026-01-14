@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+//@RequestMapping("/api")
 public class NoteController {
 
     @Autowired
@@ -22,8 +22,8 @@ public class NoteController {
     @Autowired
     SecurityService securityService;
 
-    private static final String USER_PATH = "/user/{userId}";
-    private static final String USER_NOTE_PATH = "/user/{userId}/note/{noteId}";
+    private static final String USER_PATH = "/api/user/{userId}";
+    private static final String USER_NOTE_PATH = "/api/user/{userId}/note/{noteId}";
 
     //hi test
     @GetMapping("/hi")
@@ -34,7 +34,7 @@ public class NoteController {
     //get all notes - GET
     // @GetMapping("/user/{userId}")
     @GetMapping(USER_PATH)
-    public ResponseEntity<List<ResponseNoteDto>> getNotes(@PathVariable long userId){
+    public ResponseEntity<List<ResponseNoteDto>> getNotes(@PathVariable("userId") long userId){
         List<ResponseNoteDto> returnList = dataRepository.findByUserId(userId)
                 .stream()
                 .map(ResponseNoteDto::from)
