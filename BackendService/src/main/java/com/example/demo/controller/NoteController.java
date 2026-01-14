@@ -45,7 +45,7 @@ public class NoteController {
     //get a note - GET
 //    @GetMapping("/user/{userId}/note/{noteId}")
     @GetMapping(USER_NOTE_PATH)
-    public ResponseEntity<ResponseNoteDto> getNote(@PathVariable long userId,@PathVariable long noteId){
+    public ResponseEntity<ResponseNoteDto> getNote(@PathVariable("userId") long userId,@PathVariable("noteId") long noteId){
 
         return dataRepository.findByNoteIdAndUserId(noteId, userId)
                 .map(note -> ResponseEntity.ok(
@@ -57,7 +57,7 @@ public class NoteController {
     //add a note - POST
 //    @PostMapping("/user/{userId}")
     @PostMapping(USER_PATH)
-    public ResponseEntity<ResponseNoteDto> addNote(@PathVariable long userId,@RequestBody RequestNoteDto requestNoteDto){
+    public ResponseEntity<ResponseNoteDto> addNote(@PathVariable("userId") long userId,@RequestBody RequestNoteDto requestNoteDto){
         try{
             Note resultNote = dataRepository.save(new Note(userId,requestNoteDto.getTextContent(),requestNoteDto.isPinned(),requestNoteDto.isArchived()));
             ResponseNoteDto responseNoteDto = ResponseNoteDto.from(resultNote);
@@ -71,7 +71,7 @@ public class NoteController {
     //update a note - PUT
 //    @PutMapping("/user/{userId}/note/{noteId}")
     @PutMapping(USER_NOTE_PATH)
-    public ResponseEntity<ResponseNoteDto> updateNote(@PathVariable long userId,@PathVariable long noteId,@RequestBody RequestNoteDto requestNoteDto){
+    public ResponseEntity<ResponseNoteDto> updateNote(@PathVariable("userId") long userId,@PathVariable("noteId") long noteId,@RequestBody RequestNoteDto requestNoteDto){
         return dataRepository.findByNoteIdAndUserId(noteId, userId).map(note -> {
             note.setTextContent(requestNoteDto.getTextContent());
             note.setPinned(requestNoteDto.isPinned());
